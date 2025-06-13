@@ -4,7 +4,7 @@ import generatePromoCode from '../miscellanous/promoGenerate.js';
 
 export const initTelegramBot = () => {
     const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
-    const DiscordLink = process.env.DISCORD_LINK;
+    const DiscordLink = process.env.DISCORD_LINK || 'https://discord.gg/Wy8D8WBuKu';
 
     // Handle /start command
     bot.onText(/\/start/, (msg) => {
@@ -26,6 +26,26 @@ Let’s get started! 🚀
         bot.sendMessage(chatId, welcomeMessage.trim(), { parse_mode: "Markdown" });
     });
 
+    // help command
+    bot.onText(/\/help/, (msg) => {
+        const chatId = msg.chat.id;
+
+        const helpMessage = `
+🛠 **Help Menu - Tech Nest Bot**
+
+Here are the commands you can use:
+
+📌 /start – Start your journey with the bot  
+🎁 /promo – Generate your unique promo code  
+🔗 /discord – Get the invite link to our Discord server  
+❓ /help – View this help message again
+
+Need assistance? Just send a message here and we’ll try to help! 💬
+    `;
+
+        bot.sendMessage(chatId, helpMessage.trim(), { parse_mode: "Markdown" });
+    });
+
     // Handle /promo command
     bot.onText(/\/promo/, (msg) => {
         const chatId = msg.chat.id;
@@ -35,7 +55,7 @@ Let’s get started! 🚀
 Your unique promo code is: ${promoCode}
 
 📋 **How to use your code:**
-1. Join our Discord server 
+1. Join our Discord server ${DiscordLink}
 2. Find a teacher/admin in the Discord server
 3. Share your promo code with them for verification
 4. Once verified, you'll get access to classes!
